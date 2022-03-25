@@ -43,8 +43,8 @@ class adminController {
     try {
       const {count = 100} = req.body
 
-      console.log(count)
       const users = await adminServices.usersList(count)
+
 
       return res.status(200).json({count, users})
     } catch(e) {

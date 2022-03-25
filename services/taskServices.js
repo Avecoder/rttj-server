@@ -1,4 +1,5 @@
 const TaskModel = require('../models/taskModel')
+const UserModel = require('../models/userModel')
 const ApiError = require('../exceptions/apiError')
 const uniqid = require('uniqid')
 
@@ -8,6 +9,12 @@ class TaskServices {
   async addTask(task) {
     task.date = new Date(task.date)
     task.taskID = uniqid()
+    if(task.isCompleted) {
+      const user = await UserModel.findOne({userID: task.userID})
+      user.hours += task.hours
+      console.log(user)
+      user.save()
+    }
     const newTask = await TaskModel.create(task)
 
     return newTask
@@ -15,22 +22,28 @@ class TaskServices {
 
   async addTodayTask(taskID, hours) {
     const task = await TaskModel.findOne({taskID})
+    const user = await UserModel.findOne({userID: task.userID})
 
     task.hours += hours
+    user.hours += hours
 
-    task.save()
+    await task.save()
+    await user.save()
 
     return task
   }
 
   async completeTodayTask(taskID, hours) {
     const task = await TaskModel.findOne({taskID})
+    const user = await UserModel.findOne({userID: task.userID})
 
     task.hours = hours
+    user.hours += hours
 
     task.isCompleted = true
 
-    task.save()
+    await task.save()
+    await user.save()
 
     return task
   }

@@ -70,6 +70,8 @@ class UserServices {
 
     const pad = (s) => ('00' + s).slice(-2)
 
+    
+    
 
     while(start.getTime() < end.getTime()) {
       start.setTime( start.getTime()+ 1000 * 60 * 60 * 24);
@@ -77,6 +79,7 @@ class UserServices {
       if(dataItem.length === 0) allData.push({date: new Date(`${start.getFullYear()}-${pad(start.getMonth()+1)}-${pad(start.getDate())}`), hours: 0})
       else allData.push(...dataItem)
     }
+
 
 
     const dataItems = allData.map(item => {

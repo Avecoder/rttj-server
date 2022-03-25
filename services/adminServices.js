@@ -5,7 +5,7 @@ class AdminServices {
     const user = await UserModel.findOne({userID})
 
     user.status = 'BANNED'
-    user.substatus = 'Ты забанен блять'
+    user.substatus = 'Забаненный'
 
     await user.save()
     return user
@@ -15,7 +15,7 @@ class AdminServices {
     const user = await UserModel.findOne({userID})
 
     user.status = 'USER'
-    user.substatus = 'подпездник'
+    user.substatus = 'Обычный чел'
 
     await user.save()
     return user
@@ -37,7 +37,7 @@ class AdminServices {
 
   async findUsersByUsername(username) {
     const users = await UserModel.find({}).limit(10)
-    return users.filter(item => item.username.toLowerCase().indexOf(username) >= 0)
+    return users.filter(item => item.username.toLowerCase().indexOf(username.toLowerCase()) >= 0 && item.status !== 'ADMIN')
   }
 }
 

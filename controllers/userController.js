@@ -58,12 +58,12 @@ class userController {
 
   async getData(req, res, next) {
     try {
-      const start = new Date().getTime()
+
       const {userID, firstDate, secondDate} = req.body
 
       const allData = await userServices.getData(userID, firstDate, secondDate)
       const end = new Date().getTime()
-      console.log(`Get data - ${end - start}ms.`)
+
       return res.status(200).json(allData)
     } catch(e) {
       next(e)
@@ -73,7 +73,7 @@ class userController {
 
   async getAllData(req, res, next) {
     try {
-      const start = new Date().getTime()
+
       const {firstDate, secondDate, userID} = req.body
 
       const usersID = await userServices.getUsersID(userID)
@@ -87,8 +87,7 @@ class userController {
         await usersDataWeeks.push({userID: usersID[i], data, username: user.username, substatus: user.substatus})
       }
 
-      const end = new Date().getTime()
-      console.log(`Get all data - ${end - start}ms.`)
+
       return res.status(200).json(usersDataWeeks)
     } catch(e) {
       next(e)

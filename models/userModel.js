@@ -6,7 +6,7 @@ const UserSchema = new Schema({
   username: {type: String, required: true},
   hours: {type: Number, required: true, default: 0},
   status: {type: String, required: true, default: 'USER'},
-  substatus: {type: String, required: true, default: 'подпездник'},
+  substatus: {type: String, required: true, default: 'Обычный чел'},
   friendsList: [
     {
       friendID: {type: Number, required: true},

@@ -16,11 +16,17 @@ const PORT = process.env.PORT || 5000 // Используем 5000 порт
 const app = express()  // Создаем экземпляр приложения
 
 app.use(cors()) // Подключаем middleware cors()
+
 app.use(cookieParser()) // Подключаем middleware cookieParser()
 app.use(express.static(path.resolve(__dirname, 'static'))) 
 app.use(fileUpload({}))
 app.use(express.json()) // Подключаем middleware express.json()
-
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
+    next()
+})
 app.use('/api', router)
 
 const start = async () => {

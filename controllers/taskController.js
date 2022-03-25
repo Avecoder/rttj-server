@@ -121,10 +121,10 @@ class taskController{
 
       const pad = (s) => ('00' + s).slice(-2)
 
-      while(start.getTime() < end.getTime()) {
+
+      for(let time = start.getTime(); time < end.getTime(); time = start.setDate(start.getDate()+1)) {
         taskItem = await taskServices.getTaskByDate(userID, `${start.getFullYear()}-${pad(start.getMonth()+1)}-${pad(start.getDate())}`)
         allTasks.push(...taskItem)
-        start.setDate( start.getDate()+1);
       }
 
 
