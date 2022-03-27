@@ -12,6 +12,8 @@ const router = require('./router')
 
 const PORT = process.env.PORT || 5000 // Используем 5000 порт
 
+console.log(`DATABASE - ${process.env.DB_URL}`)
+
 
 const app = express()  // Создаем экземпляр приложения
 
