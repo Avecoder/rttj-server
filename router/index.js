@@ -20,6 +20,9 @@ router.post('/users-by-id', userController.usersByID)
 router.post('/get-token', userController.getToken) //+++++++++++++++++++++++++++++
 router.post('/find-by-token', userController.findByToken) //+++++++++++++++++++++++++++++
 router.post('/change-user-inf', userController.changeUserInf) //+++++++++++++++++++++++++++++
+router.post('/update-token', userController.updateToken) //+++++++++++++++++++++++++++++
+
+
 
 router.post('/add-task', body('label').isLength({min: 3, max: 64}), taskController.addTask) //+++++++++++++++++++++++++++++
 router.post('/add-today-task', taskController.addTodayTask) //+++++++++++++++++++++++++++++

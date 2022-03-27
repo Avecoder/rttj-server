@@ -50,6 +50,22 @@ class UserServices {
     return token
   }
 
+  async updateToken(userID) {
+    const user = await UserModel.findOne({userID})
+    const token = await TokenModel.findOne({user: user._id})
+
+    const payload = {
+      userID,
+      username: user.username
+    }
+
+    const newToken = jwt.sign(payload, process.env.TOKEN_KEY)
+
+    token.token = newToken
+
+    return token
+  }
+
   async findByToken(token) {
     const tokenData = await TokenModel.findOne({token})
     if(tokenData === null) {

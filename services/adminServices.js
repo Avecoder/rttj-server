@@ -5,7 +5,7 @@ class AdminServices {
     const user = await UserModel.findOne({userID})
 
     user.status = 'BANNED'
-    user.substatus = 'Забаненный'
+
 
     await user.save()
     return user
@@ -15,7 +15,7 @@ class AdminServices {
     const user = await UserModel.findOne({userID})
 
     user.status = 'USER'
-    user.substatus = 'Обычный чел'
+
 
     await user.save()
     return user
