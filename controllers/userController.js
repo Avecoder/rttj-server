@@ -43,8 +43,8 @@ class userController {
     } catch(e) {
       next(e)
     }
-  }  
-  
+  }
+
   async updateToken(req, res, next) {
     try {
       const {userID} = req.body
@@ -92,7 +92,7 @@ class userController {
 
       for(let i = 0; i < usersID.length; i++) {
         const data = await userServices.getPeriodData(firstDate, secondDate, usersID[i])
-        
+
         const user = await userServices.info(usersID[i])
         await usersDataWeeks.push({userID: usersID[i], data, username: user.username, substatus: user.substatus, status: user.status})
       }
@@ -184,4 +184,3 @@ class userController {
 
 
 module.exports = new userController()
-

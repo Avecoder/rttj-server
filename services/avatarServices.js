@@ -29,7 +29,7 @@ class AvatarServices {
 					image.write(`./static/${userID}.jpg`)
 					fs.unlinkSync(`./static/${userID}.png`)
 				})
-				
+
 			} else {
 				request.head(url, function(err, res, body){
 				    request(url).pipe(fs.createWriteStream(`./static/${userID}.jpg`)).on('close', () => console.log(`Avatar ${username} saved(${userID}.jpg).`))
@@ -51,7 +51,8 @@ class AvatarServices {
 	async updateAvatar(image, userID) {
 		try {
 			let fileName = `${userID}.jpg`
-			image.mv(path.resolve(__dirname, '..', 'static', fileName))
+
+			await image.mv(path.resolve(__dirname, '..', 'static', fileName))
 			return fileName
 		} catch(e) {
 			console.log(e)
@@ -59,6 +60,6 @@ class AvatarServices {
 	}
 }
 
-  
+
 
 module.exports = new AvatarServices()
