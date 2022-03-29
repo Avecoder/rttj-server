@@ -86,8 +86,8 @@ class UserServices {
 
     const pad = (s) => ('00' + s).slice(-2)
 
-    
-    
+
+
 
     while(start.getTime() < end.getTime()) {
       start.setTime( start.getTime()+ 1000 * 60 * 60 * 24);
@@ -101,7 +101,7 @@ class UserServices {
     const dataItems = allData.map(item => {
       return {
         label: item.label,
-        hours: item.hours,
+        hours: (item.hours).toFixed(1),
         taskID: item.taskID,
         date: item.date
       }
@@ -122,7 +122,7 @@ class UserServices {
       const weekData = []
       for (let i = 0; i < 7; i++) {
         const taskItem = await TaskModel.find({userID, date: new Date(`${end.getFullYear()}-${pad(end.getMonth()+1)}-${pad(end.getDate())}`), isCompleted: true})
-        const dataItem = taskItem.map(item => item.hours)
+        const dataItem = taskItem.map(item => (item.hours).toFixed(1))
         weekData.push(...dataItem)
         end.setDate( end.getDate()-1)
       }
@@ -210,7 +210,7 @@ class UserServices {
   async updateUsername(userID, username) {
     try {
       const user = await UserModel.findOne({userID})
-      user.username = username 
+      user.username = username
       await user.save()
       return username
     } catch(e) {
