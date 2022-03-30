@@ -101,7 +101,7 @@ class UserServices {
     const dataItems = allData.map(item => {
       return {
         label: item.label,
-        hours: (item.hours).toFixed(1),
+        hours: item.hours,
         taskID: item.taskID,
         date: item.date
       }
@@ -122,7 +122,7 @@ class UserServices {
       const weekData = []
       for (let i = 0; i < 7; i++) {
         const taskItem = await TaskModel.find({userID, date: new Date(`${end.getFullYear()}-${pad(end.getMonth()+1)}-${pad(end.getDate())}`), isCompleted: true})
-        const dataItem = taskItem.map(item => (item.hours).toFixed(1))
+        const dataItem = taskItem.map(item => item.hours)
         weekData.push(...dataItem)
         end.setDate( end.getDate()-1)
       }
