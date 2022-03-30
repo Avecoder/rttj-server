@@ -7,9 +7,9 @@ class userController {
   async login(req, res, next) {
     try {
       const {userID, username} = req.body
-      const {user, tokenData} = await userServices.login(userID, username)
+      const {user, tokenData, userStatus} = await userServices.login(userID, username)
       const avatar = await avatarServices.downloadAvatar(userID, username)
-      return res.status(200).json({user, tokenData, avatar})
+      return res.status(200).json({user, tokenData, avatar, userStatus})
     } catch(e) {
       next(e)
     }

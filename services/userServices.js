@@ -20,7 +20,7 @@ class UserServices {
     const token = jwt.sign(payload, process.env.TOKEN_KEY)
 
     if(candidate) {
-      throw ApiError.BadRequest(`Пользователь с id ${userID} уже есть`)
+      return {userStatus: 'alreadyLogin'}
     }
 
     const user = await UserModel.create({userID, username})
