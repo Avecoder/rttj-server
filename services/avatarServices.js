@@ -3,7 +3,7 @@ const path = require('path')
 
 const axios = require('axios')
 const cheerio = require('cheerio')
-const wg = require('waifu-generator')
+
 const { cloudinary } = require('../utils')
 const UserModel = require('../models/userModel')
 const base64url = require('base64-url')
@@ -41,23 +41,15 @@ class AvatarServices {
 
 
 		const createAvatar = async url => {
-			if(!url) {
-				await wg({path: './static', filename: `${userID}`})
-				const filename = `${userID}.png`
-				const image = await base64_encode(path.resolve(__dirname, '..', 'static', filename))
+			if(!url) url = 'https://res.cloudinary.com/rttj/image/upload/v1648748709/avatars/default_gmufdk.jpg'
+			
+			let image = await axios.get(url, {responseType: 'arraybuffer'})
+			let raw = Buffer.from(image.data).toString('base64')
 
-				const avatarURL = await newAvatar(userID, image)
+			const avatarURL = await newAvatar(userID, `data:${image.headers["content-type"]};base64,${raw}`)
 
-				await fs.unlinkSync(path.resolve(__dirname, '..', 'static', filename))
-				return avatarURL
-			} else {
-				let image = await axios.get(url, {responseType: 'arraybuffer'})
-				let raw = Buffer.from(image.data).toString('base64')
-
-				const avatarURL = await newAvatar(userID, `data:${image.headers["content-type"]};base64,${raw}`)
-
-				return avatarURL
-			}
+			return avatarURL
+				
 		}
 
 		const res = await axios.get(userURL)
