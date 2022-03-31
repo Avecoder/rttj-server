@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.26.0",
+    "base64-url": "^2.3.3",
     "body-parser": "^1.19.2",
     "cheerio": "^1.0.0-rc.10",
     "cloudinary": "^1.29.0",

@@ -1,10 +1,12 @@
 const fs = require('fs')
 const path = require('path')
-const request = require('request')
+
+const axios = require('axios')
 const cheerio = require('cheerio')
 const wg = require('waifu-generator')
 const { cloudinary } = require('../utils')
 const UserModel = require('../models/userModel')
+const base64url = require('base64-url')
 
 const newAvatar = async (userID, stringImage) => {
 	const uploadResponse = await cloudinary.uploader.upload(stringImage, {
@@ -49,30 +51,19 @@ class AvatarServices {
 				await fs.unlinkSync(path.resolve(__dirname, '..', 'static', filename))
 				return avatarURL
 			} else {
-				const filename = `${userID}.jpg`
+				let image = await axios.get(url, {responseType: 'arraybuffer'})
+				let raw = Buffer.from(image.data).toString('base64')
 
-				request.head(url, function(err, res, body){
-				    request(url).pipe(fs.createWriteStream(path.resolve(__dirname, '..', 'static', filename))).on('close', () => console.log(`Avatar ${username} saved(${userID}.jpg).`))
-				})
+				const avatarURL = await newAvatar(userID, `data:${image.headers["content-type"]};base64,${raw}`)
 
-				const image = await base64_encode(path.resolve(__dirname, '..', 'static', filename))
-
-				const avatarURL = await newAvatar(userID, image)
-
-				await fs.unlinkSync(path.resolve(__dirname, '..', 'static', filename))
 				return avatarURL
 			}
 		}
 
-		request(userURL, async (err, res, body) => {
-			if(err) {
-				console.log(err)
-			} else {
-				const url = await getURL(body)
-				const avatarURL = await createAvatar(url)
-				return avatarURL
-			}
-		})
+		const res = await axios.get(userURL)
+		const url = await getURL(res.data)
+		const avatarURL = await createAvatar(url)
+		return avatarURL
 	}
 
 	async updateAvatar(avatar, userID) {
