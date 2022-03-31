@@ -7,6 +7,7 @@ const UserSchema = new Schema({
   hours: {type: Number, required: true, default: 0},
   status: {type: String, required: true, default: 'USER'},
   substatus: {type: String, required: true, default: 'Обычный чел'},
+  avatarURL: {type: String, required: true, default: ' '},
   friendsList: [
     {
       friendID: {type: Number, required: true},

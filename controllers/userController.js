@@ -8,7 +8,7 @@ class userController {
     try {
       const {userID, username} = req.body
       const {user, tokenData, userStatus} = await userServices.login(userID, username)
-      const avatar = await avatarServices.downloadAvatar(userID, username)
+      const avatar = await avatarServices.createNewAvatar(userID, username)
       return res.status(200).json({user, tokenData, avatar, userStatus})
     } catch(e) {
       next(e)
@@ -164,13 +164,14 @@ class userController {
 
   async changeUserInf (req, res, next) {
     try {
-      const {img} = req.files
 
-      const {userID, username} = req.body
 
-      const avatar = await avatarServices.updateAvatar(img, userID)
+      const {userID, username, avatar} = req.body
+
+
+      const avatarURL = await avatarServices.updateAvatar(avatar, userID)
       const name = await userServices.updateUsername(userID, username)
-      return res.status(200).json({avatar, name})
+      return res.status(200).json({avatarURL, name})
     } catch(e) {
       next(e)
     }

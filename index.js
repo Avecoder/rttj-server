@@ -8,6 +8,7 @@ const mongoose = require('mongoose') // Импортируем mongoose
 const path = require('path')
 const fileUpload = require('express-fileupload')
 const router = require('./router')
+const bodyParser = require("body-parser")
 
 
 const PORT = process.env.PORT || 5000 // Используем 5000 порт
@@ -18,6 +19,8 @@ const app = express()  // Создаем экземпляр приложения
 
 app.use(cors()) // Подключаем middleware cors()
 
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cookieParser()) // Подключаем middleware cookieParser()
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))

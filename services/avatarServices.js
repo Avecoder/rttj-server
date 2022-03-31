@@ -3,13 +3,32 @@ const path = require('path')
 const request = require('request')
 const cheerio = require('cheerio')
 const wg = require('waifu-generator')
-const pngToJpg = require('png-jpg')
-const jimp = require('jimp')
+const { cloudinary } = require('../utils')
+const UserModel = require('../models/userModel')
 
+const newAvatar = async (userID, stringImage) => {
+	const uploadResponse = await cloudinary.uploader.upload(stringImage, {
+			upload_preset: 'avatars',
+	})
+
+
+	const user = await UserModel.findOne({userID})
+	user.avatarURL = uploadResponse.secure_url
+	await user.save()
+
+
+
+	return uploadResponse.secure_url
+}
+
+const base64_encode = file => {
+		return "data:image/gif;base64,"+fs.readFileSync(file, 'base64');
+}
 
 class AvatarServices {
-	async downloadAvatar(userID, username) {
+	async createNewAvatar(userID, username) {
 		const userURL = `https://t.me/${username}`
+
 
 		const getURL = body => {
 			const $ = cheerio.load(body)
@@ -17,23 +36,31 @@ class AvatarServices {
 			return url
 		}
 
+
+
 		const createAvatar = async url => {
 			if(!url) {
 				await wg({path: './static', filename: `${userID}`})
-				await jimp.read(`./static/${userID}.png`, (err, image) => {
-					if(err) {
-						console.log(err)
-						return
-					}
+				const filename = `${userID}.png`
+				const image = await base64_encode(path.resolve(__dirname, '..', 'static', filename))
 
-					image.write(`./static/${userID}.jpg`)
-					fs.unlinkSync(`./static/${userID}.png`)
-				})
+				const avatarURL = await newAvatar(userID, image)
 
+				await fs.unlinkSync(path.resolve(__dirname, '..', 'static', filename))
+				return avatarURL
 			} else {
+				const filename = `${userID}.jpg`
+
 				request.head(url, function(err, res, body){
-				    request(url).pipe(fs.createWriteStream(`./static/${userID}.jpg`)).on('close', () => console.log(`Avatar ${username} saved(${userID}.jpg).`))
+				    request(url).pipe(fs.createWriteStream(path.resolve(__dirname, '..', 'static', filename))).on('close', () => console.log(`Avatar ${username} saved(${userID}.jpg).`))
 				})
+
+				const image = await base64_encode(path.resolve(__dirname, '..', 'static', filename))
+
+				const avatarURL = await newAvatar(userID, image)
+
+				await fs.unlinkSync(path.resolve(__dirname, '..', 'static', filename))
+				return avatarURL
 			}
 		}
 
@@ -42,18 +69,16 @@ class AvatarServices {
 				console.log(err)
 			} else {
 				const url = await getURL(body)
-				await createAvatar(url)
+				const avatarURL = await createAvatar(url)
+				return avatarURL
 			}
 		})
-
 	}
 
-	async updateAvatar(image, userID) {
+	async updateAvatar(avatar, userID) {
 		try {
-			let fileName = `${userID}.jpg`
-
-			await image.mv(path.resolve(__dirname, '..', 'static', fileName))
-			return fileName
+			const avatarURL = await newAvatar(userID, avatar)
+			return avatarURL
 		} catch(e) {
 			console.log(e)
 		}
