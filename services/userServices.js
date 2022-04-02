@@ -20,7 +20,7 @@ class UserServices {
     const token = jwt.sign(payload, process.env.TOKEN_KEY)
 
     if(candidate) {
-      return {userStatus: 'alreadyLogin'}
+      return {candidate: true}
     }
 
     const user = await UserModel.create({userID, username})

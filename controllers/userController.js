@@ -7,9 +7,12 @@ class userController {
   async login(req, res, next) {
     try {
       const {userID, username} = req.body
-      const {user, tokenData, userStatus} = await userServices.login(userID, username)
-      const avatar = await avatarServices.createNewAvatar(userID, username)
-      return res.status(200).json({user, tokenData, avatar, userStatus})
+      const {user, tokenData, candidate} = await userServices.login(userID, username)
+      if(candidate) {
+        const avatar = await avatarServices.createNewAvatar(userID, username)
+        return res.status(200).json({candidate})
+      }
+      return res.status(200).json({user, tokenData, avatar})
     } catch(e) {
       next(e)
     }
