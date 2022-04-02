@@ -94,7 +94,7 @@ class userController {
         const data = await userServices.getPeriodData(firstDate, secondDate, usersID[i])
 
         const user = await userServices.info(usersID[i])
-        await usersDataWeeks.push({userID: usersID[i], data, username: user.username, substatus: user.substatus, status: user.status})
+        await usersDataWeeks.push({userID: usersID[i], data, username: user.username, substatus: user.substatus, status: user.status, hours: user.hours})
       }
 
 
