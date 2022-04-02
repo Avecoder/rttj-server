@@ -9,9 +9,9 @@ class userController {
       const {userID, username} = req.body
       const {user, tokenData, candidate} = await userServices.login(userID, username)
       if(candidate) {
-        const avatar = await avatarServices.createNewAvatar(userID, username)
         return res.status(200).json({candidate})
       }
+      const avatar = await avatarServices.createNewAvatar(userID, username)
       return res.status(200).json({user, tokenData, avatar})
     } catch(e) {
       next(e)
